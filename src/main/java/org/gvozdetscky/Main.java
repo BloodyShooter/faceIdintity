@@ -11,8 +11,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URL;
 
 public class Main extends Application {
 
@@ -26,6 +31,26 @@ public class Main extends Application {
 
         Button uploadImage1 = new Button("Загрузка изображения 1");
         Button uploadImage2 = new Button("Загрузка изображения 2");
+
+        uploadImage1.setOnAction(event -> {
+            final FileChooser fileChooser = new FileChooser();
+
+            File file = fileChooser.showOpenDialog(primaryStage);
+            if (file != null) {
+                System.out.println(file.getName());
+            }
+
+        });
+
+        uploadImage2.setOnAction(event -> {
+            final FileChooser fileChooser = new FileChooser();
+
+            File file = fileChooser.showOpenDialog(primaryStage);
+
+            if (file != null) {
+                System.out.println(file.getName());
+            }
+        });
 
         Scene scene = new Scene(root, 300, 300);
 
@@ -48,6 +73,8 @@ public class Main extends Application {
         root.setCenter(vbox);
 
         vbox.getChildren().addAll(uploadImage1, uploadImage2);
+
+        primaryStage.getIcons().add(new Image(new FileInputStream("C:\\Users\\Yagorka\\Pictures\\estus.png")));
 
         primaryStage.show();
     }
