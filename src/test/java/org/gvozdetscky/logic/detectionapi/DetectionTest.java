@@ -11,7 +11,8 @@ public class DetectionTest {
     @Test
     public void faceIdintityTest() {
 
-        detection.faceIdintity("", "");
+        detection.faceIdintity("C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\1.png",
+                "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\2.png");
 
     }
 }
