@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.gvozdetscky.logic.Parser;
 import org.gvozdetscky.logic.detectionapi.Detection;
 
 import java.io.File;
@@ -30,6 +31,8 @@ public class Main extends Application {
     private ImageView imageView1 = new ImageView();
 
     private ImageView imageView2 = new ImageView();
+
+    private Label result = new Label();
 
     public void start(Stage primaryStage) throws Exception {
 
@@ -113,6 +116,15 @@ public class Main extends Application {
             String log = detection.faceIdintity(pathImage1, pathImage2);
 
             textArea.appendText(log);
+
+            Parser parser = new Parser();
+
+            if (parser.getEvlidDeistanation(log) > 40) {
+                System.out.println(parser.getEvlidDeistanation(log));
+                result.setText("Это один и тот же человек");
+            } else {
+                result.setText("Это два разных человека");
+            }
         });
 
         Scene scene = new Scene(root, 500, 500);
@@ -133,9 +145,11 @@ public class Main extends Application {
 
         root.setTop(menubar);
 
+        textArea.setMinHeight(600);
+
         root.setCenter(hBox);
 
-        hBox.getChildren().addAll(leftSideBox, rightSideBox, runBtn);
+        hBox.getChildren().addAll(leftSideBox, rightSideBox, runBtn, result);
 
         leftSideBox.getChildren().addAll(uploadImage1, imageView1);
 
