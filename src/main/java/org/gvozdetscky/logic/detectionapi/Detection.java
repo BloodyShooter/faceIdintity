@@ -1,10 +1,17 @@
 package org.gvozdetscky.logic.detectionapi;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.gvozdetscky.logic.CmdClass;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 public class Detection {
 
@@ -19,68 +26,40 @@ public class Detection {
         return out;
     }
 
-    public String url(String pathImage1, String pathImage2) {
+    public String faceIdintityUrl(String pathImage1, String pathImage2) {
 
-        System.out.println("1");
+        String responseText = "";
 
         try {
-            URL serverUrl =
-                    new URL("http://localhost:5000/api/test");
+            CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 
-            HttpURLConnection urlConnection = (HttpURLConnection) serverUrl.openConnection();
+            HttpPost httppost = new HttpPost("http://127.0.0.1:5000/api/test");
+            File file1 = new File(pathImage1);
+            File file2 = new File(pathImage2);
 
-            File image1 = new File(pathImage1);
-            File image2 = new File(pathImage2);
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            ContentBody cbFile1 = new FileBody(file1, "image/jpeg");
+            ContentBody cbFile2 = new FileBody(file2, "image/jpeg");
+            builder.addPart("my_image1", cbFile1);
+            builder.addPart("my_image2", cbFile2);
+            HttpEntity MultipartEntity = builder.build();
 
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.addRequestProperty("Content-Type", "multipart/form-data;");
+            httppost.setEntity(MultipartEntity);
+            System.out.println("executing request " + httppost.getRequestLine());
+            HttpResponse response = httpclient.execute(httppost);
 
-            OutputStream outputStreamToRequestBody = urlConnection.getOutputStream();
-            BufferedWriter httpRequestBodyWriter =
-                    new BufferedWriter(new OutputStreamWriter(outputStreamToRequestBody));
+            HttpEntity resEntity = response.getEntity();
+            responseText = EntityUtils.toString(resEntity,"UTF-8");
 
-            httpRequestBodyWriter.write("Content-Disposition: form-data;"
-                    + "name=\"my_image1\";");
-            httpRequestBodyWriter.flush();
 
-            FileInputStream inputStreamToImageFile1 = new FileInputStream(image1);
-            FileInputStream inputStreamToImageFile2 = new FileInputStream(image2);
+            System.out.println(response.getStatusLine());
+            System.out.println(responseText);
 
-            int bytesRead;
-            byte[] dataBuffer = new byte[1024];
-            while((bytesRead = inputStreamToImageFile1.read(dataBuffer)) != -1) {
-                outputStreamToRequestBody.write(dataBuffer, 0, bytesRead);
-            }
-
-            httpRequestBodyWriter.write("name=\"my_image2\";");
-            httpRequestBodyWriter.flush();
-
-            while((bytesRead = inputStreamToImageFile1.read(dataBuffer)) != -1) {
-                outputStreamToRequestBody.write(dataBuffer, 0, bytesRead);
-            }
-
-            outputStreamToRequestBody.flush();
-
-            outputStreamToRequestBody.close();
-            httpRequestBodyWriter.close();
-
-            System.out.println(urlConnection.getResponseCode());
-
-            BufferedReader httpResponseReader =
-                    new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            String lineRead;
-            while((lineRead = httpResponseReader.readLine()) != null) {
-                System.out.println(lineRead);
-            }
-
-            httpResponseReader.close();
-
-            return "";
+            httpclient.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return null;
+        return responseText;
     }
 }

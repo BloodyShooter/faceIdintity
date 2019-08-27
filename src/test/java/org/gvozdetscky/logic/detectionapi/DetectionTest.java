@@ -17,9 +17,9 @@ public class DetectionTest {
     }
 
     @Test
-    public void urlTest() {
+    public void faceIdintityUrlTest() {
 
-        detection.url("C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\1.png",
+        detection.faceIdintityUrl("C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\1.png",
                 "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\2.png");
 
     }

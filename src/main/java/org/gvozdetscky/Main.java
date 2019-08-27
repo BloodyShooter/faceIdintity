@@ -113,18 +113,16 @@ public class Main extends Application {
         runBtn.setOnAction(event -> {
             Detection detection = new Detection();
 
-            String log = detection.faceIdintity(pathImage1, pathImage2);
+            String respounce = detection.faceIdintityUrl(pathImage1, pathImage2);
 
-            textArea.appendText(log);
+            textArea.appendText(respounce);
 
-            Parser parser = new Parser();
-
-            if (parser.getEvlidDeistanation(log) > 40) {
-                System.out.println(parser.getEvlidDeistanation(log));
-                result.setText("Это один и тот же человек");
-            } else {
-                result.setText("Это два разных человека");
-            }
+//            if (parser.getEvlidDeistanation(log) > 40) {
+//                System.out.println(parser.getEvlidDeistanation(log));
+//                result.setText("Это один и тот же человек");
+//            } else {
+//                result.setText("Это два разных человека");
+//            }
         });
 
         Scene scene = new Scene(root, 500, 500);
