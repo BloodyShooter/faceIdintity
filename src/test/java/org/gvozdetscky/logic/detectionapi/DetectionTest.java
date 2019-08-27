@@ -15,4 +15,12 @@ public class DetectionTest {
                 "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\2.png");
 
     }
+
+    @Test
+    public void urlTest() {
+
+        detection.url("C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\1.png",
+                "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\2.png");
+
+    }
 }
