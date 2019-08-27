@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.gvozdetscky.logic.Parser;
 import org.gvozdetscky.logic.detectionapi.Detection;
 
 import java.io.File;

@@ -15,15 +15,16 @@ import java.io.*;
 
 public class Detection {
 
+    private static final String URL_SERVER = "http://127.0.0.1:5000/api/test";
+    private static final String PATH_TO_PYTHON = "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\venv\\Scripts\\python.exe ";
+    private static final String PATH_TO_SCRYPT = "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\script\\face_idintity.py ";
 
     public String faceIdintity(String pathImage1, String pathImage2) {
         CmdClass cmd = new CmdClass();
 
-        String out = cmd.run("C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\venv\\Scripts\\python.exe " +
-                          "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\script\\face_idintity.py " +
-                pathImage1 + " " + pathImage2);
+        String executeCmdFaceIdintity = PATH_TO_PYTHON + PATH_TO_SCRYPT + pathImage1 + " " + pathImage2;
 
-        return out;
+        return cmd.run(executeCmdFaceIdintity);
     }
 
     public String faceIdintityUrl(String pathImage1, String pathImage2) {
@@ -33,13 +34,11 @@ public class Detection {
         try {
             CloseableHttpClient httpclient = HttpClientBuilder.create().build();
 
-            HttpPost httppost = new HttpPost("http://127.0.0.1:5000/api/test");
-            File file1 = new File(pathImage1);
-            File file2 = new File(pathImage2);
+            HttpPost httppost = new HttpPost(URL_SERVER);
 
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            ContentBody cbFile1 = new FileBody(file1, "image/jpeg");
-            ContentBody cbFile2 = new FileBody(file2, "image/jpeg");
+            ContentBody cbFile1 = new FileBody(new File(pathImage1));
+            ContentBody cbFile2 = new FileBody(new File(pathImage2));
             builder.addPart("my_image1", cbFile1);
             builder.addPart("my_image2", cbFile2);
             HttpEntity MultipartEntity = builder.build();
