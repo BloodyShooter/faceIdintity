@@ -1,5 +1,9 @@
 package org.gvozdetscky;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -9,6 +13,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,8 +34,13 @@ public class Main extends Application {
     private String pathImage2 = "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\2.png";
 
     private ImageView imageView1 = new ImageView();
-
     private ImageView imageView2 = new ImageView();
+
+    private Image image1;
+    private Image image2;
+
+    private ImageView findFaceImageView1 = new ImageView();
+    private ImageView findFaceImageView2 = new ImageView();
 
     private Label result = new Label();
 
@@ -69,7 +80,8 @@ public class Main extends Application {
                 textArea.appendText("Выбрали 1 картинку " + path + "\n");
 
                 try {
-                    imageView1.setImage(new Image(file.toURI().toURL().toString()));
+                    image1 = new Image(file.toURI().toURL().toString());
+                    imageView1.setImage(image1);
 
 
                 } catch (MalformedURLException e) {
@@ -91,7 +103,8 @@ public class Main extends Application {
                 textArea.appendText("Выбрали 2 картинку " + path + "\n");
 
                 try {
-                    imageView2.setImage(new Image(file.toURI().toURL().toString()));
+                    image2 = new Image(file.toURI().toURL().toString());
+                    imageView2.setImage(image2);
 
                     if (imageView2.getFitHeight() > 300) {
                         imageView2.setFitHeight(300);
@@ -116,12 +129,45 @@ public class Main extends Application {
 
             textArea.appendText(respounce);
 
-//            if (parser.getEvlidDeistanation(log) > 40) {
-//                System.out.println(parser.getEvlidDeistanation(log));
-//                result.setText("Это один и тот же человек");
-//            } else {
-//                result.setText("Это два разных человека");
-//            }
+            JsonParser parser = new JsonParser();
+
+            JsonElement jsonElement = parser.parse(respounce);
+
+            JsonObject rootObject = jsonElement.getAsJsonObject();
+
+            float evclide_distance = rootObject.get("evclide_distance").getAsFloat();
+
+            int otvet = (int)((1 - evclide_distance) * 100);
+            System.out.println(otvet);
+
+            JsonArray box1 = rootObject.get("image1").getAsJsonObject().get("box").getAsJsonArray();
+
+            PixelReader reader = image1.getPixelReader();
+            WritableImage newImage = new WritableImage(reader, box1.get(0).getAsInt(), box1.get(1).getAsInt(),
+                    box1.get(2).getAsInt() - box1.get(0).getAsInt(), box1.get(3).getAsInt() - box1.get(1).getAsInt());
+
+            findFaceImageView1.setImage(newImage);
+
+            JsonArray box2 = rootObject.get("image2").getAsJsonObject().get("box").getAsJsonArray();
+
+            int x = box2.get(0).getAsInt();
+            int y = box2.get(1).getAsInt();
+            int w = box2.get(2).getAsInt() - box2.get(0).getAsInt();
+            int h = box2.get(3).getAsInt() - box2.get(1).getAsInt();
+
+            System.out.println("Размеры картинки" + image2.getWidth() + ", " + image2.getHeight());
+
+            reader = image2.getPixelReader();
+            newImage = new WritableImage(reader, x, y,
+                    w, h);
+
+            findFaceImageView2.setImage(newImage);
+
+            if (otvet > 40) {
+                result.setText("Это один и тот же человек");
+            } else {
+                result.setText("Это два разных человека");
+            }
         });
 
         Scene scene = new Scene(root, 500, 500);
@@ -146,7 +192,8 @@ public class Main extends Application {
 
         root.setCenter(hBox);
 
-        hBox.getChildren().addAll(leftSideBox, rightSideBox, runBtn, result);
+        hBox.getChildren().addAll(leftSideBox, rightSideBox, runBtn, result,
+                findFaceImageView1, findFaceImageView2);
 
         leftSideBox.getChildren().addAll(uploadImage1, imageView1);
 
