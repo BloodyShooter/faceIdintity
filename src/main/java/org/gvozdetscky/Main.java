@@ -1,9 +1,5 @@
 package org.gvozdetscky;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -29,8 +25,6 @@ import org.gvozdetscky.model.Result;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends Application {
 
@@ -164,21 +158,9 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 500, 500);
 
-        MenuBar menubar = new MenuBar();
-
-        Menu about = new Menu("Справка");
-
-        MenuItem menuAboutProg =new MenuItem("О программе");
-
-        menuAboutProg.setOnAction(event -> showAboutProgramm());
-
-        about.getItems().add(menuAboutProg);
-
-        menubar.getMenus().add(about);
-
         primaryStage.setScene(scene);
 
-        root.setTop(menubar);
+        root.setTop(createAndGetMenu());
 
         textArea.setMinHeight(600);
 
@@ -212,5 +194,21 @@ public class Main extends Application {
         dialog.setGraphic(imageView);
 
         dialog.showAndWait();
+    }
+
+    private MenuBar createAndGetMenu() {
+        MenuBar menuBar = new MenuBar();
+
+        Menu about = new Menu("Справка");
+
+        MenuItem menuAboutProg = new MenuItem("О программе");
+
+        menuAboutProg.setOnAction(event -> showAboutProgramm());
+
+        about.getItems().add(menuAboutProg);
+
+        menuBar.getMenus().add(about);
+
+        return menuBar;
     }
 }

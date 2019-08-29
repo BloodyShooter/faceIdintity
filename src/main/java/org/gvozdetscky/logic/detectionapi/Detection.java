@@ -44,15 +44,11 @@ public class Detection {
             HttpEntity MultipartEntity = builder.build();
 
             httppost.setEntity(MultipartEntity);
-            System.out.println("executing request " + httppost.getRequestLine());
             HttpResponse response = httpclient.execute(httppost);
 
             HttpEntity resEntity = response.getEntity();
             responseText = EntityUtils.toString(resEntity,"UTF-8");
 
-
-            System.out.println(response.getStatusLine());
-            System.out.println(responseText);
 
             httpclient.close();
         } catch (Exception e) {

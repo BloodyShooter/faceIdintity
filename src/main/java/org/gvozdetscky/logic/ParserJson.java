@@ -48,8 +48,6 @@ public class ParserJson {
 
         image.setBox(box);
 
-        System.out.println(box);
-
         return image;
     }
 }
