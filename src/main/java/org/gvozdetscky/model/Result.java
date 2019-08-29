@@ -1,24 +1,26 @@
 package org.gvozdetscky.model;
 
+import java.util.List;
+
 public class Result {
 
-    private int evclidDeistance;
+    private List<Image> images;
 
-    private Box box;
+    private float evclidDeistance;
 
-    public int getEvclidDeistance() {
+    public float getEvclidDeistance() {
         return evclidDeistance;
     }
 
-    public void setEvclidDeistance(int evclidDeistance) {
+    public void setEvclidDeistance(float evclidDeistance) {
         this.evclidDeistance = evclidDeistance;
     }
 
-    public Box getBox() {
-        return box;
+    public List<Image> getImages() {
+        return images;
     }
 
-    public void setBox(Box box) {
-        this.box = box;
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 }

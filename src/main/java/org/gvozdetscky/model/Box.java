@@ -38,4 +38,14 @@ public class Box {
     public void setBottom(int bottom) {
         this.bottom = bottom;
     }
+
+    @Override
+    public String toString() {
+        return "Box{" +
+                "left=" + left +
+                ", top=" + top +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
+    }
 }

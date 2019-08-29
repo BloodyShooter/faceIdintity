@@ -21,11 +21,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.gvozdetscky.logic.ParserJson;
 import org.gvozdetscky.logic.detectionapi.Detection;
+import org.gvozdetscky.model.Box;
+import org.gvozdetscky.model.Result;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -129,44 +134,31 @@ public class Main extends Application {
 
             textArea.appendText(respounce);
 
-            JsonParser parser = new JsonParser();
+            ParserJson parserJson = new ParserJson();
 
-            JsonElement jsonElement = parser.parse(respounce);
+            Result result = parserJson.parseJson(respounce);
 
-            JsonObject rootObject = jsonElement.getAsJsonObject();
+            int otvet = (int)((1 - result.getEvclidDeistance()) * 100);
 
-            float evclide_distance = rootObject.get("evclide_distance").getAsFloat();
-
-            int otvet = (int)((1 - evclide_distance) * 100);
-            System.out.println(otvet);
-
-            JsonArray box1 = rootObject.get("image1").getAsJsonObject().get("box").getAsJsonArray();
+            Box box1 = result.getImages().get(0).getBox();
+            Box box2 = result.getImages().get(1).getBox();
 
             PixelReader reader = image1.getPixelReader();
-            WritableImage newImage = new WritableImage(reader, box1.get(0).getAsInt(), box1.get(1).getAsInt(),
-                    box1.get(2).getAsInt() - box1.get(0).getAsInt(), box1.get(3).getAsInt() - box1.get(1).getAsInt());
+            WritableImage newImage = new WritableImage(reader, box1.getLeft(), box1.getTop(),
+                    box1.getRight(), box1.getBottom());
 
             findFaceImageView1.setImage(newImage);
 
-            JsonArray box2 = rootObject.get("image2").getAsJsonObject().get("box").getAsJsonArray();
-
-            int x = box2.get(0).getAsInt();
-            int y = box2.get(1).getAsInt();
-            int w = box2.get(2).getAsInt() - box2.get(0).getAsInt();
-            int h = box2.get(3).getAsInt() - box2.get(1).getAsInt();
-
-            System.out.println("Размеры картинки" + image2.getWidth() + ", " + image2.getHeight());
-
             reader = image2.getPixelReader();
-            newImage = new WritableImage(reader, x, y,
-                    w, h);
+            newImage = new WritableImage(reader, box2.getLeft(), box2.getTop(),
+                    box2.getRight(), box2.getBottom());
 
             findFaceImageView2.setImage(newImage);
 
             if (otvet > 40) {
-                result.setText("Это один и тот же человек");
+                this.result.setText("Это один и тот же человек");
             } else {
-                result.setText("Это два разных человека");
+                this.result.setText("Это два разных человека");
             }
         });
 
