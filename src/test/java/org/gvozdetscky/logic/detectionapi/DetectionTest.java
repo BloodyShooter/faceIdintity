@@ -38,7 +38,7 @@ public class DetectionTest {
             chars[i] = c2;
         }
 
-        String newStr = chars.toString();
+        String newStr = String.valueOf(chars);
 
         System.out.println(newStr);
     }

@@ -4,9 +4,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -16,7 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import org.gvozdetscky.GUI.MenuBarApplication;
 import org.gvozdetscky.logic.ParserJson;
 import org.gvozdetscky.logic.detectionapi.Detection;
 import org.gvozdetscky.model.Box;
@@ -27,6 +24,9 @@ import java.io.FileInputStream;
 import java.net.MalformedURLException;
 
 public class Main extends Application {
+
+    private static final int DEFAULT_WIDTH = 500;
+    private static final int DEFAULT_HEIGHT = 500;
 
     private String pathImage1 = "C:\\Users\\Yagorka\\PycharmProjects\\FindFace\\1.png";
 
@@ -156,11 +156,11 @@ public class Main extends Application {
             }
         });
 
-        Scene scene = new Scene(root, 500, 500);
+        Scene scene = new Scene(root, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
         primaryStage.setScene(scene);
 
-        root.setTop(createAndGetMenu());
+        root.setTop(new MenuBarApplication().createAndGet());
 
         textArea.setMinHeight(600);
 
@@ -178,37 +178,5 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(new FileInputStream("C:\\Users\\Yagorka\\Pictures\\estus.png")));
 
         primaryStage.show();
-    }
-
-    private void showAboutProgramm() {
-        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
-        dialog.initStyle(StageStyle.UTILITY);
-        dialog.setTitle("Инфо");
-        dialog.setHeaderText("Программа по распознаванию лиц!\n" +
-                             "Разработчик: Гвоздецкий Егор\n\n\n" +
-                             "Контакты: vk.com/gvozdetscky.egor");
-
-        Image image = new Image("https://sun9-26.userapi.com/c636224/v636224916/b5fa/Ah1tLNp24LQ.jpg");
-        ImageView imageView = new ImageView(image);
-
-        dialog.setGraphic(imageView);
-
-        dialog.showAndWait();
-    }
-
-    private MenuBar createAndGetMenu() {
-        MenuBar menuBar = new MenuBar();
-
-        Menu about = new Menu("Справка");
-
-        MenuItem menuAboutProg = new MenuItem("О программе");
-
-        menuAboutProg.setOnAction(event -> showAboutProgramm());
-
-        about.getItems().add(menuAboutProg);
-
-        menuBar.getMenus().add(about);
-
-        return menuBar;
     }
 }
